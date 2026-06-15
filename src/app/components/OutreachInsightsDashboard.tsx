@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ChevronDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Activity, CircleDot, Send, Users, Search } from "lucide-react";
 import OutreachActivityChart from "./OutreachActivityChart";
 import svgPaths from "../../imports/OutreachInsights/svg-jbrhwk28hh";
+import PoliciesPage from "./PoliciesPage";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -543,12 +544,12 @@ function ExportButton({ onClick }: { onClick: () => void }) {
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
 
-function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
+function StatCard({ label, value, sub, tip }: { label: string; value: string; sub?: string; tip?: string }) {
   return (
     <div className="bg-white flex-1 min-w-0 rounded-[12px] border border-[#e3e9ee] p-[20px] flex flex-col items-start">
       <div className="flex gap-[8px] items-center w-full">
         <span className="font-['inter:medium',sans-serif] text-[13px] text-[#4b5f73] leading-[18px] whitespace-nowrap">{label}</span>
-        <InfoIcon />
+        <InfoIcon tip={tip} />
       </div>
       <div className="font-['Inter:Medium',sans-serif] font-medium text-[30px] text-[#1e2831] tracking-[-1px] leading-[1.4] mt-1">{value}</div>
       <div className="font-['Inter:regular',sans-serif] text-[12px] text-[#4b5f73] tracking-[0.25px] leading-[20px] h-[20px]">{sub ?? ""}</div>
@@ -560,15 +561,37 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
 
 type PerfSortKey = keyof Omit<PerformanceRow, "user"> | "user";
 
-function isHighReview(val: number) { return val >= 18; }
-function isHighUndelivered(val: number) { return val >= 4; }
-function isHighTime(val: number) { return val >= 3.0; }
-function isHighEditRate(val: number) { return val >= 55; }
-function isHighOverdue(val: number) { return val >= 4; }
+type Tier = "red" | "amber" | null;
 
-function PerfCell({ value, highlight = false, warn = false }: { value: string; highlight?: boolean; warn?: boolean }) {
-  const bg = highlight ? "bg-[#fce9e8]" : warn ? "bg-[#fbf4eb]" : "bg-white";
-  const color = highlight ? "text-[#5f0e08]" : warn ? "text-[#5c3c16]" : "text-[#1e2831]";
+function combinedTier(r: PerformanceRow): Tier {
+  const total = r.review + r.completed;
+  const unactioned = total === 0 ? 0 : r.review / total;
+  if (unactioned >= 0.70 && r.sendRate <= 25) return "red";
+  if (unactioned >= 0.40 && r.sendRate <= 50) return "amber";
+  return null;
+}
+
+function timeTier(val: number): Tier {
+  if (val >= 5) return "red";
+  if (val >= 3) return "amber";
+  return null;
+}
+
+function dueSoonTier(val: number): Tier {
+  if (val >= 10) return "red";
+  if (val >= 5) return "amber";
+  return null;
+}
+
+function overdueTier(val: number): Tier {
+  if (val >= 5) return "red";
+  if (val >= 2) return "amber";
+  return null;
+}
+
+function PerfCell({ value, tier = null }: { value: string; tier?: Tier }) {
+  const bg = tier === "red" ? "bg-[#fce9e8]" : tier === "amber" ? "bg-[#fbf4eb]" : "bg-white";
+  const color = tier === "red" ? "text-[#5f0e08]" : tier === "amber" ? "text-[#5c3c16]" : "text-[#1e2831]";
   return (
     <div className={`${bg} h-[46px] flex items-center px-[20px] border-b border-[#f6f8fa]`}>
       <span className={`font-['inter:medium',sans-serif] text-[14px] leading-[20px] whitespace-nowrap ${color}`}>{value}</span>
@@ -626,14 +649,14 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
 
   const colDef = [
     { label: "User", key: "user" as PerfSortKey, width: undefined, tip: undefined },
-    { label: "Completed", key: "completed" as PerfSortKey, width: 130, tip: "Outreach tasks marked complete" },
-    { label: "Review", key: "review" as PerfSortKey, width: 110, tip: "Tasks awaiting review" },
-    { label: "Send Rate", key: "sendRate" as PerfSortKey, width: 120, tip: "Share of emails successfully sent" },
-    { label: "Undelivered", key: "undelivered" as PerfSortKey, width: 110, tip: "Emails that failed to deliver" },
-    { label: "Time to Complete", key: "timeToComplete" as PerfSortKey, width: 150, tip: "Average days from start to completion" },
-    { label: "Email Edit Rate", key: "emailEditRate" as PerfSortKey, width: 140, tip: "Share of emails edited before sending" },
-    { label: "Due Soon", key: "dueSoon" as PerfSortKey, width: 110, tip: "Tasks due within the next 7 days" },
-    { label: "Overdue", key: "overdue" as PerfSortKey, width: 110, tip: "Tasks past their due date" },
+    { label: "Completed", key: "completed" as PerfSortKey, width: 130, tip: "Outreach is complete — email sent, called, mailed, texted, or no action needed." },
+    { label: "Review", key: "review" as PerfSortKey, width: 110, tip: "Connect email is ready but hasn't been sent or actioned yet." },
+    { label: "Send Rate", key: "sendRate" as PerfSortKey, width: 120, tip: "% of processed policies with a Connect email sent." },
+    { label: "Undelivered", key: "undelivered" as PerfSortKey, width: 110, tip: "Email did not deliver — covers delivery failures, spam complaints, and unsubscribes." },
+    { label: "Time to Complete", key: "timeToComplete" as PerfSortKey, width: 150, tip: "Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." },
+    { label: "Email Edit Rate", key: "emailEditRate" as PerfSortKey, width: 140, tip: "% of emails customized before sending." },
+    { label: "Due Soon", key: "dueSoon" as PerfSortKey, width: 110, tip: "Policies approaching their effective date within 7 days." },
+    { label: "Overdue", key: "overdue" as PerfSortKey, width: 110, tip: "Effective date has passed with no outreach completed." },
   ];
 
   function handleExport() {
@@ -650,7 +673,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
       <div className="bg-white flex items-center justify-between px-[20px] py-[12px]">
         <div className="flex gap-[8px] items-center">
           <span className="font-['Inter:Medium',sans-serif] font-medium text-[16px] text-[#1e2831] tracking-[-0.25px] leading-[22px]">Performance</span>
-          <InfoIcon />
+          <InfoIcon tip="How each user on your team is performing across outreach and email delivery. Rows are attributed to the actual sender." />
         </div>
         <ExportButton onClick={handleExport} />
       </div>
@@ -661,37 +684,43 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
             <ColHeader key={c.key} label={c.label} colKey={c.key} width={c.width} tip={c.tip} />
           ))}
         </div>
-        {pageRows.map(r => (
-          <div key={r.user} className="flex hover:bg-[#fafbfc] transition-colors" style={{ minWidth: 900 }}>
-            <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#f6f8fa] bg-white">
-              <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.user}</span>
+        {pageRows.map(r => {
+          const combined = combinedTier(r);
+          const time = timeTier(r.timeToComplete);
+          const dueSoon = dueSoonTier(r.dueSoon);
+          const overdue = overdueTier(r.overdue);
+          return (
+            <div key={r.user} className="flex hover:bg-[#fafbfc] transition-colors" style={{ minWidth: 900 }}>
+              <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#f6f8fa] bg-white">
+                <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.user}</span>
+              </div>
+              <div style={{ width: 130 }}>
+                <PerfCell value={String(r.completed)} />
+              </div>
+              <div style={{ width: 110 }}>
+                <PerfCell value={String(r.review)} tier={combined} />
+              </div>
+              <div style={{ width: 120 }}>
+                <PerfCell value={`${r.sendRate}%`} tier={combined} />
+              </div>
+              <div style={{ width: 110 }}>
+                <PerfCell value={String(r.undelivered)} />
+              </div>
+              <div style={{ width: 150 }}>
+                <PerfCell value={`${r.timeToComplete}d`} tier={time} />
+              </div>
+              <div style={{ width: 140 }}>
+                <PerfCell value={`${r.emailEditRate}%`} />
+              </div>
+              <div style={{ width: 110 }}>
+                <PerfCell value={String(r.dueSoon)} tier={dueSoon} />
+              </div>
+              <div style={{ width: 110 }}>
+                <PerfCell value={String(r.overdue)} tier={overdue} />
+              </div>
             </div>
-            <div style={{ width: 130 }}>
-              <PerfCell value={String(r.completed)} />
-            </div>
-            <div style={{ width: 110 }}>
-              <PerfCell value={String(r.review)} highlight={isHighReview(r.review)} />
-            </div>
-            <div style={{ width: 120 }}>
-              <PerfCell value={`${r.sendRate}%`} />
-            </div>
-            <div style={{ width: 110 }}>
-              <PerfCell value={String(r.undelivered)} highlight={isHighUndelivered(r.undelivered)} />
-            </div>
-            <div style={{ width: 150 }}>
-              <PerfCell value={`${r.timeToComplete}d`} highlight={isHighTime(r.timeToComplete)} />
-            </div>
-            <div style={{ width: 140 }}>
-              <PerfCell value={`${r.emailEditRate}%`} warn={isHighEditRate(r.emailEditRate)} />
-            </div>
-            <div style={{ width: 110 }}>
-              <PerfCell value={String(r.dueSoon)} />
-            </div>
-            <div style={{ width: 110 }}>
-              <PerfCell value={String(r.overdue)} highlight={isHighOverdue(r.overdue)} />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
     <TableFooter total={total} page={currentPage} pageSize={PAGE_SIZE} onChange={setPage} />
@@ -779,7 +808,7 @@ function ActivityTable() {
       <div className="bg-white flex items-center justify-between px-[20px] py-[12px]">
         <div className="flex gap-[8px] items-center">
           <span className="font-['Inter:Medium',sans-serif] font-medium text-[16px] text-[#1e2831] tracking-[-0.25px] leading-[22px]">Activity</span>
-          <InfoIcon />
+          <InfoIcon tip="Per-policy drill-down of outreach actions and email delivery status for each renewal. Sortable and filterable." />
         </div>
         <div className="flex gap-[8px] items-center">
           {(userActionFilter !== "All" || statusFilter !== "All" || deliveryFilter !== "All") && (
@@ -803,10 +832,10 @@ function ActivityTable() {
           <ColHeader label="Policy ID" colKey="policyId" flex tip="Unique policy identifier" />
           <ColHeader label="Effective Date" colKey="effectiveDate" width={140} tip="Policy effective date" />
           <ColHeader label="User" colKey="user" width={110} />
-          <ColHeader label="User Action" colKey="userAction" flex tip="Most recent action taken" />
-          <ColHeader label="Status" colKey="status" width={140} tip="Current workflow status" />
-          <ColHeader label="Delivery Status" colKey="deliveryStatus" flex tip="Email delivery outcome" />
-          <ColHeader label="Undelivered Reason" colKey="undeliveredReason" width={200} tip="Why the email failed to deliver" />
+          <ColHeader label="User Action" colKey="userAction" flex tip="Outreach method used — Email Sent, Called, Mailed, SMS, or No Action Required." />
+          <ColHeader label="Status" colKey="status" width={140} tip="Review = not yet actioned. Completed = outreach done." />
+          <ColHeader label="Delivery Status" colKey="deliveryStatus" flex tip="Email delivery outcome — Delivered, Undelivered, or Opened. Only applies to rows where an email was sent." />
+          <ColHeader label="Undelivered Reason" colKey="undeliveredReason" width={200} tip="Why the email failed to deliver. Sourced from Mailgun — covers invalid addresses, full inboxes, spam blocks, opt-outs, and more." />
           {/* action column header */}
           <ColumnTitle empty width={73} />
         </div>
@@ -974,6 +1003,9 @@ export default function OutreachInsightsDashboard() {
 
       {/* ── Main content ─────────────────────────────────────── */}
       <div className="bg-[#f6f8fa] flex-1 min-w-0 flex flex-col">
+        {activeNav === "Policies" ? (
+          <PoliciesPage />
+        ) : (<>
         {/* Tab bar */}
         <div className="bg-[#f6f8fa] border-b border-[#e3e9ee] flex gap-[12px] items-center px-[32px] shrink-0 sticky top-0 z-30">
           {tabs.map(tab => (
@@ -1025,12 +1057,12 @@ export default function OutreachInsightsDashboard() {
 
             {/* Stats row */}
             <div className="flex gap-[12px] items-start w-full">
-              <StatCard label="Active Users" value="68%" sub="12 of 18 users active" />
-              <StatCard label="Send Rate" value="72%" sub="1,802 emails sent" />
-              <StatCard label="Time to Complete" value="1.8d" />
-              <StatCard label="Delivery Rate" value="96.4%" sub="1,737 of 1,802 sent" />
-              <StatCard label="Undelivered rate" value="3.6%" sub="65 undelivered" />
-              <StatCard label="Open Rate" value="41%" sub="712 of 1,737 delivered" />
+              <StatCard label="Active Users" value="68%" sub="12 of 18 users active" tip="% of users who took at least one outreach action this period. Only users with the 'user' role are included — managers are excluded." />
+              <StatCard label="Send Rate" value="72%" sub="1,802 emails sent" tip="% of processed policies with a Connect email sent." />
+              <StatCard label="Time to Complete" value="1.8d" tip="Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." />
+              <StatCard label="Delivery Rate" value="96.4%" sub="1,737 of 1,802 sent" tip="% of emails sent from Quandri that were successfully delivered to the recipient." />
+              <StatCard label="Undelivered rate" value="3.6%" sub="65 undelivered" tip="% of sent emails that failed to deliver, including invalid addresses, inbox issues, provider blocks, and opt-outs." />
+              <StatCard label="Open Rate" value="41%" sub="712 of 1,737 delivered" tip="% of delivered emails opened by the recipient. Requires email tracking to be enabled." />
             </div>
 
             {/* divider */}
@@ -1062,6 +1094,7 @@ export default function OutreachInsightsDashboard() {
             <ActivityTable />
           </div>
         </div>
+        </>)}
       </div>
     </div>
   );
