@@ -14,6 +14,7 @@ interface PerformanceRow {
   completed: number;
   review: number;
   sendRate: number;
+  emailsSent: number;
   undelivered: number;
   timeToComplete: number;
   emailEditRate: number;
@@ -35,26 +36,26 @@ interface ActivityRow {
 // ─── Static Data ──────────────────────────────────────────────────────────────
 
 const ALL_PERF_ROWS: PerformanceRow[] = [
-  { user: "Roy", completed: 33, review: 18, sendRate: 58, undelivered: 2, timeToComplete: 1.6, emailEditRate: 38, dueSoon: 8, overdue: 4 },
-  { user: "Eleanor Pena", completed: 46, review: 5, sendRate: 80, undelivered: 1, timeToComplete: 0.9, emailEditRate: 22, dueSoon: 2, overdue: 1 },
-  { user: "Devon Lane", completed: 24, review: 22, sendRate: 39, undelivered: 4, timeToComplete: 3.2, emailEditRate: 61, dueSoon: 6, overdue: 8 },
-  { user: "Jacob Jones", completed: 40, review: 9, sendRate: 67, undelivered: 2, timeToComplete: 1.5, emailEditRate: 41, dueSoon: 4, overdue: 3 },
-  { user: "Albert Flores", completed: 33, review: 11, sendRate: 66, undelivered: 0, timeToComplete: 2.1, emailEditRate: 30, dueSoon: 3, overdue: 2 },
-  { user: "Kathryn Murphy", completed: 29, review: 8, sendRate: 42, undelivered: 2, timeToComplete: 1.4, emailEditRate: 24, dueSoon: 2, overdue: 1 },
-  { user: "Marcus Webb", completed: 37, review: 14, sendRate: 71, undelivered: 3, timeToComplete: 1.8, emailEditRate: 45, dueSoon: 5, overdue: 3 },
-  { user: "Priya Nair", completed: 51, review: 4, sendRate: 85, undelivered: 1, timeToComplete: 0.7, emailEditRate: 18, dueSoon: 1, overdue: 0 },
-  { user: "Dan Ortiz", completed: 28, review: 19, sendRate: 44, undelivered: 5, timeToComplete: 2.9, emailEditRate: 57, dueSoon: 7, overdue: 6 },
-  { user: "Lena Kim", completed: 42, review: 7, sendRate: 76, undelivered: 1, timeToComplete: 1.1, emailEditRate: 27, dueSoon: 3, overdue: 1 },
-  { user: "Wade Warren", completed: 31, review: 12, sendRate: 63, undelivered: 2, timeToComplete: 1.7, emailEditRate: 43, dueSoon: 4, overdue: 2 },
-  { user: "Jenny Wilson", completed: 48, review: 6, sendRate: 81, undelivered: 1, timeToComplete: 1.0, emailEditRate: 25, dueSoon: 2, overdue: 0 },
-  { user: "Guy Hawkins", completed: 22, review: 24, sendRate: 36, undelivered: 6, timeToComplete: 3.4, emailEditRate: 64, dueSoon: 9, overdue: 7 },
-  { user: "Theresa Webb", completed: 39, review: 10, sendRate: 70, undelivered: 2, timeToComplete: 1.6, emailEditRate: 39, dueSoon: 4, overdue: 2 },
-  { user: "Cody Fisher", completed: 35, review: 13, sendRate: 64, undelivered: 3, timeToComplete: 2.0, emailEditRate: 47, dueSoon: 5, overdue: 3 },
-  { user: "Savannah Nguyen", completed: 53, review: 3, sendRate: 88, undelivered: 0, timeToComplete: 0.6, emailEditRate: 16, dueSoon: 1, overdue: 0 },
-  { user: "Brooklyn Simmons", completed: 26, review: 20, sendRate: 41, undelivered: 5, timeToComplete: 3.1, emailEditRate: 59, dueSoon: 7, overdue: 6 },
-  { user: "Jerome Bell", completed: 44, review: 8, sendRate: 74, undelivered: 1, timeToComplete: 1.2, emailEditRate: 29, dueSoon: 3, overdue: 1 },
-  { user: "Arlene McCoy", completed: 30, review: 16, sendRate: 55, undelivered: 3, timeToComplete: 2.4, emailEditRate: 52, dueSoon: 6, overdue: 4 },
-  { user: "Ralph Edwards", completed: 41, review: 9, sendRate: 72, undelivered: 2, timeToComplete: 1.4, emailEditRate: 35, dueSoon: 3, overdue: 2 },
+  { user: "Roy", completed: 33, review: 18, sendRate: 58, emailsSent: 38, undelivered: 2, timeToComplete: 1.6, emailEditRate: 38, dueSoon: 8, overdue: 4 },
+  { user: "Eleanor Pena", completed: 46, review: 5, sendRate: 80, emailsSent: 71, undelivered: 1, timeToComplete: 0.9, emailEditRate: 22, dueSoon: 2, overdue: 1 },
+  { user: "Devon Lane", completed: 24, review: 22, sendRate: 39, emailsSent: 18, undelivered: 4, timeToComplete: 3.2, emailEditRate: 61, dueSoon: 6, overdue: 8 },
+  { user: "Jacob Jones", completed: 40, review: 9, sendRate: 67, emailsSent: 52, undelivered: 2, timeToComplete: 1.5, emailEditRate: 41, dueSoon: 4, overdue: 3 },
+  { user: "Albert Flores", completed: 33, review: 11, sendRate: 66, emailsSent: 43, undelivered: 0, timeToComplete: 2.1, emailEditRate: 30, dueSoon: 3, overdue: 2 },
+  { user: "Kathryn Murphy", completed: 29, review: 8, sendRate: 42, emailsSent: 26, undelivered: 2, timeToComplete: 1.4, emailEditRate: 24, dueSoon: 2, overdue: 1 },
+  { user: "Marcus Webb", completed: 37, review: 14, sendRate: 71, emailsSent: 55, undelivered: 3, timeToComplete: 1.8, emailEditRate: 45, dueSoon: 5, overdue: 3 },
+  { user: "Priya Nair", completed: 51, review: 4, sendRate: 85, emailsSent: 84, undelivered: 1, timeToComplete: 0.7, emailEditRate: 18, dueSoon: 1, overdue: 0 },
+  { user: "Dan Ortiz", completed: 28, review: 19, sendRate: 44, emailsSent: 24, undelivered: 5, timeToComplete: 2.9, emailEditRate: 57, dueSoon: 7, overdue: 6 },
+  { user: "Lena Kim", completed: 42, review: 7, sendRate: 76, emailsSent: 63, undelivered: 1, timeToComplete: 1.1, emailEditRate: 27, dueSoon: 3, overdue: 1 },
+  { user: "Wade Warren", completed: 31, review: 12, sendRate: 63, emailsSent: 41, undelivered: 2, timeToComplete: 1.7, emailEditRate: 43, dueSoon: 4, overdue: 2 },
+  { user: "Jenny Wilson", completed: 48, review: 6, sendRate: 81, emailsSent: 74, undelivered: 1, timeToComplete: 1.0, emailEditRate: 25, dueSoon: 2, overdue: 0 },
+  { user: "Guy Hawkins", completed: 22, review: 24, sendRate: 36, emailsSent: 15, undelivered: 6, timeToComplete: 3.4, emailEditRate: 64, dueSoon: 9, overdue: 7 },
+  { user: "Theresa Webb", completed: 39, review: 10, sendRate: 70, emailsSent: 53, undelivered: 2, timeToComplete: 1.6, emailEditRate: 39, dueSoon: 4, overdue: 2 },
+  { user: "Cody Fisher", completed: 35, review: 13, sendRate: 64, emailsSent: 46, undelivered: 3, timeToComplete: 2.0, emailEditRate: 47, dueSoon: 5, overdue: 3 },
+  { user: "Savannah Nguyen", completed: 53, review: 3, sendRate: 88, emailsSent: 91, undelivered: 0, timeToComplete: 0.6, emailEditRate: 16, dueSoon: 1, overdue: 0 },
+  { user: "Brooklyn Simmons", completed: 26, review: 20, sendRate: 41, emailsSent: 22, undelivered: 5, timeToComplete: 3.1, emailEditRate: 59, dueSoon: 7, overdue: 6 },
+  { user: "Jerome Bell", completed: 44, review: 8, sendRate: 74, emailsSent: 61, undelivered: 1, timeToComplete: 1.2, emailEditRate: 29, dueSoon: 3, overdue: 1 },
+  { user: "Arlene McCoy", completed: 30, review: 16, sendRate: 55, emailsSent: 34, undelivered: 3, timeToComplete: 2.4, emailEditRate: 52, dueSoon: 6, overdue: 4 },
+  { user: "Ralph Edwards", completed: 41, review: 9, sendRate: 72, emailsSent: 57, undelivered: 2, timeToComplete: 1.4, emailEditRate: 35, dueSoon: 3, overdue: 2 },
 ];
 
 const ALL_ACTIVITY_ROWS: ActivityRow[] = [
@@ -652,6 +653,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
     { label: "Completed", key: "completed" as PerfSortKey, width: 130, tip: "Outreach is complete — email sent, called, mailed, texted, or no action needed." },
     { label: "To Review", key: "review" as PerfSortKey, width: 110, tip: "Connect email is ready but hasn't been sent or actioned yet." },
     { label: "Send Rate", key: "sendRate" as PerfSortKey, width: 120, tip: "% of processed policies with a Connect email sent." },
+    { label: "Emails Sent", key: "emailsSent" as PerfSortKey, width: 120, tip: "Number of Connect emails actually sent by this user." },
     { label: "Undelivered", key: "undelivered" as PerfSortKey, width: 110, tip: "Number of emails that failed to deliver for this user — covers invalid addresses, inbox issues, provider blocks, and opt-outs." },
     { label: "Time to Complete", key: "timeToComplete" as PerfSortKey, width: 150, tip: "Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." },
     { label: "Email Edit Rate", key: "emailEditRate" as PerfSortKey, width: 140, tip: "% of emails customized before sending." },
@@ -662,7 +664,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
   function handleExport() {
     exportCSV("performance.csv",
       colDef.map(c => c.label),
-      rows.map(r => [r.user, r.completed, r.review, `${r.sendRate}%`, r.undelivered, `${r.timeToComplete}d`, `${r.emailEditRate}%`, r.dueSoon, r.overdue].map(String))
+      rows.map(r => [r.user, r.completed, r.review, `${r.sendRate}%`, r.emailsSent, r.undelivered, `${r.timeToComplete}d`, `${r.emailEditRate}%`, r.dueSoon, r.overdue].map(String))
     );
   }
 
@@ -679,7 +681,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
       </div>
       {/* Table */}
       <div className="w-full overflow-x-auto">
-        <div className="flex" style={{ minWidth: 900 }}>
+        <div className="flex" style={{ minWidth: 1020 }}>
           {colDef.map(c => (
             <ColHeader key={c.key} label={c.label} colKey={c.key} width={c.width} tip={c.tip} />
           ))}
@@ -690,7 +692,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
           const dueSoon = dueSoonTier(r.dueSoon);
           const overdue = overdueTier(r.overdue);
           return (
-            <div key={r.user} className="flex hover:bg-[#fafbfc] transition-colors" style={{ minWidth: 900 }}>
+            <div key={r.user} className="flex hover:bg-[#fafbfc] transition-colors" style={{ minWidth: 1020 }}>
               <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#f6f8fa] bg-white">
                 <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.user}</span>
               </div>
@@ -702,6 +704,9 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
               </div>
               <div style={{ width: 120 }}>
                 <PerfCell value={`${r.sendRate}%`} tier={combined} />
+              </div>
+              <div style={{ width: 120 }}>
+                <PerfCell value={String(r.emailsSent)} />
               </div>
               <div style={{ width: 110 }}>
                 <PerfCell value={String(r.undelivered)} />
@@ -1057,13 +1062,13 @@ export default function OutreachInsightsDashboard() {
 
             {/* Stats row */}
             <div className="flex gap-[12px] items-start w-full">
-              <StatCard label="Policies Processed" value="2,503" sub="processed this period" tip="Total renewal policies successfully processed by Quandri in the selected period." />
+              <StatCard label="Policies Processed" value="2,503" tip="Total renewal policies successfully processed by Quandri in the selected period." />
               <StatCard label="Active Users" value="68%" sub="12 of 18 users active" tip="% of users who took at least one outreach action this period. Only users with the 'user' role are included — managers are excluded." />
               <StatCard label="Send Rate" value="72%" sub="1,802 emails sent" tip="% of processed policies with a Connect email sent." />
-              <StatCard label="Time to Complete" value="1.8d" tip="Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." />
               <StatCard label="Delivery Rate" value="96.4%" sub="1,737 of 1,802 sent" tip="% of emails sent from Quandri that were successfully delivered to the recipient." />
-              <StatCard label="Undelivered Emails" value="65" sub="3.6% of sent" tip="Number of sent emails that failed to deliver, including invalid addresses, inbox issues, provider blocks, and opt-outs." />
+              <StatCard label="Undelivered Emails" value="65" tip="Number of sent emails that failed to deliver, including invalid addresses, inbox issues, provider blocks, and opt-outs." />
               <StatCard label="Open Rate" value="41%" sub="712 of 1,737 delivered" tip="% of delivered emails opened by the recipient. Requires email tracking to be enabled." />
+              <StatCard label="Time to Complete" value="1.8d" tip="Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." />
             </div>
 
             {/* divider */}
