@@ -1057,11 +1057,12 @@ export default function OutreachInsightsDashboard() {
 
             {/* Stats row */}
             <div className="flex gap-[12px] items-start w-full">
+              <StatCard label="Policies Processed" value="2,503" sub="processed this period" tip="Total renewal policies successfully processed by Quandri in the selected period." />
               <StatCard label="Active Users" value="68%" sub="12 of 18 users active" tip="% of users who took at least one outreach action this period. Only users with the 'user' role are included — managers are excluded." />
               <StatCard label="Send Rate" value="72%" sub="1,802 emails sent" tip="% of processed policies with a Connect email sent." />
               <StatCard label="Time to Complete" value="1.8d" tip="Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." />
               <StatCard label="Delivery Rate" value="96.4%" sub="1,737 of 1,802 sent" tip="% of emails sent from Quandri that were successfully delivered to the recipient." />
-              <StatCard label="Undelivered rate" value="3.6%" sub="65 undelivered" tip="% of sent emails that failed to deliver, including invalid addresses, inbox issues, provider blocks, and opt-outs." />
+              <StatCard label="Undelivered Emails" value="65" sub="3.6% of sent" tip="Number of sent emails that failed to deliver, including invalid addresses, inbox issues, provider blocks, and opt-outs." />
               <StatCard label="Open Rate" value="41%" sub="712 of 1,737 delivered" tip="% of delivered emails opened by the recipient. Requires email tracking to be enabled." />
             </div>
 
