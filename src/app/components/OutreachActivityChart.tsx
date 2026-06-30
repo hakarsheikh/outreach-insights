@@ -4,8 +4,8 @@ import svgPaths from "../../imports/Table-1/svg-tlcm07u584";
 
 // ─── Series definitions ─────────────────────────────────────────────────────────
 // Two views of the same daily renewals, toggled by the segmented control:
-//   • "By status"  — Completed vs Incomplete (the high-level "are we keeping up?")
-//   • "By action"  — Completed broken into its completion types, Incomplete on top
+//   • "By status"  — Completed vs To Review (the high-level "are we keeping up?")
+//   • "By action"  — Completed broken into its completion types, To Review on top
 // These are different dimensions, so we never mix them in one stack.
 
 interface Series {
@@ -15,7 +15,7 @@ interface Series {
   hover: string;
 }
 
-const INCOMPLETE: Series = { id: "incomplete", label: "Incomplete",  color: "#b1ceef", hover: "#8ab5df" };
+const INCOMPLETE: Series = { id: "incomplete", label: "To Review",  color: "#b1ceef", hover: "#8ab5df" };
 const COMPLETED:  Series = { id: "completed",  label: "Completed",   color: "#0260ca", hover: "#0147a3" };
 
 // Completion types — the breakdown that lives *inside* Completed.
@@ -28,7 +28,7 @@ const ACTION_TYPES: Series[] = [
 ];
 
 const STATUS_SERIES: Series[] = [COMPLETED, INCOMPLETE];
-// "By action" shows only completed outreach — Incomplete has no action type, so it
+// "By action" shows only completed outreach — To Review has no action type, so it
 // is excluded here (it lives in the "By status" view). Bars therefore represent the
 // completed portion only and read shorter than the status view, which is intended.
 const ACTION_SERIES: Series[] = [...ACTION_TYPES];
@@ -37,7 +37,7 @@ const SERIES_BY_ID: Record<string, Series> = Object.fromEntries(
 );
 
 // Visual stack, top → bottom (flex-col renders first child on top). In the status
-// view Incomplete sits on top of Completed; in the action view the largest type
+// view To Review sits on top of Completed; in the action view the largest type
 // (Email Sent) anchors the bottom.
 const STACK_BY_STATUS = ["incomplete", "completed"];
 const STACK_BY_ACTION = ["noAction", "mailed", "sms", "called", "emailSent"];
@@ -147,7 +147,7 @@ export default function OutreachActivityChart() {
           <span className="font-['Inter:Medium',sans-serif] font-medium text-[16px] text-[#1e2831] tracking-[-0.25px] leading-[22px]">Outreach Activity Status</span>
           <InfoIcon />
         </div>
-        {/* View toggle — Completed vs Incomplete  ⇄  completion-type breakdown */}
+        {/* View toggle — Completed vs To Review  ⇄  completion-type breakdown */}
         <div className="flex items-center gap-[2px] bg-[#f6f8fa] border border-[#e3e9ee] rounded-[8px] p-[3px]">
           {([["status", "By status"], ["action", "By action"]] as const).map(([m, label]) => (
             <button
@@ -233,7 +233,7 @@ export default function OutreachActivityChart() {
                       </div>
                     )}
 
-                    {/* Bar itself — stacked visible segments (Incomplete on top) */}
+                    {/* Bar itself — stacked visible segments (To Review on top) */}
                     <div
                       className="relative overflow-clip rounded-tl-[8px] rounded-tr-[8px] flex flex-col"
                       style={{ width: BAR_W, height: visibleH }}

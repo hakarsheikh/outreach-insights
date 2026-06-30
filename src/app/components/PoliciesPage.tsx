@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { Search, ChevronDown, ChevronUp, X, ArrowLeft, Copy, MoreHorizontal, TrendingUp, TrendingDown, Home, Car } from "lucide-react";
 
-type PolicyAction = "Incomplete" | "Completed";
+type PolicyAction = "To Review" | "Completed";
 type UserAction = "Email Sent" | "Called" | "Mailed" | "SMS" | "No Action Required";
 type DeliveryStatus = "Delivered" | "Undelivered" | "Opened";
 
@@ -31,16 +31,16 @@ const COMPLETION_OPTIONS: { value: UserAction; desc: string }[] = [
 ];
 
 const INITIAL_POLICIES: Policy[] = [
-  { id: "FMH 2458773",  lookupId: "205030", client: "Sydney Collins",   clientEmail: "sydmac67@gmail.com",  policyType: "Homeowners", carrier: "Central Mutual", effectiveDate: "2026-07-19", processedDate: "2026-06-12", premium: 1863, premChange: 394,  policyAction: "Incomplete", userAction: null,             deliveryStatus: null },
-  { id: "9P16083",      lookupId: "205031", client: "Michelle Siefker", clientEmail: "msiefker@gmail.com",  policyType: "Auto",       carrier: "37915H",         effectiveDate: "2026-07-18", processedDate: "2026-06-11", premium: 2036, premChange: 1172, policyAction: "Incomplete", userAction: null,             deliveryStatus: null },
+  { id: "FMH 2458773",  lookupId: "205030", client: "Sydney Collins",   clientEmail: "sydmac67@gmail.com",  policyType: "Homeowners", carrier: "Central Mutual", effectiveDate: "2026-07-19", processedDate: "2026-06-12", premium: 1863, premChange: 394,  policyAction: "To Review", userAction: null,             deliveryStatus: null },
+  { id: "9P16083",      lookupId: "205031", client: "Michelle Siefker", clientEmail: "msiefker@gmail.com",  policyType: "Auto",       carrier: "37915H",         effectiveDate: "2026-07-18", processedDate: "2026-06-11", premium: 2036, premChange: 1172, policyAction: "To Review", userAction: null,             deliveryStatus: null },
   { id: "5186421500",   lookupId: "205032", client: "Alex Unterbrink",  clientEmail: "alex.u@gmail.com",    policyType: "Homeowners", carrier: "Auto Owners",    effectiveDate: "2026-07-17", processedDate: "2026-06-11", premium: 1805, premChange: 1,    policyAction: "Completed", userAction: "Email Sent",     deliveryStatus: "Delivered" },
   { id: "FMA 3663210",  lookupId: "205033", client: "Eric Wieging",     clientEmail: "ewieging@gmail.com",  policyType: "Auto",       carrier: "Central Mutual", effectiveDate: "2026-07-15", processedDate: "2026-06-11", premium: 2124, premChange: 2047, policyAction: "Completed", userAction: "Called",         deliveryStatus: null },
   { id: "FMA 3663211",  lookupId: "205034", client: "Cliff Wieging",    clientEmail: "cwieging@gmail.com",  policyType: "Auto",       carrier: "Central Mutual", effectiveDate: "2026-07-15", processedDate: "2026-06-12", premium: 2037, premChange: 1960, policyAction: "Completed", userAction: "Email Sent",     deliveryStatus: "Opened" },
-  { id: "HO626626",     lookupId: "205035", client: "Elijah Jones",     clientEmail: "ejones@gmail.com",    policyType: "Homeowners", carrier: "Goodville",      effectiveDate: "2026-07-14", processedDate: "2026-06-11", premium: 1314, premChange: -79,  policyAction: "Incomplete", userAction: null,             deliveryStatus: null },
+  { id: "HO626626",     lookupId: "205035", client: "Elijah Jones",     clientEmail: "ejones@gmail.com",    policyType: "Homeowners", carrier: "Goodville",      effectiveDate: "2026-07-14", processedDate: "2026-06-11", premium: 1314, premChange: -79,  policyAction: "To Review", userAction: null,             deliveryStatus: null },
   { id: "AU847291",     lookupId: "205036", client: "Diana Pierce",     clientEmail: "dpierce@gmail.com",   policyType: "Auto",       carrier: "State Farm",     effectiveDate: "2026-07-13", processedDate: "2026-06-10", premium: 1592, premChange: 213,  policyAction: "Completed", userAction: "Email Sent",     deliveryStatus: "Undelivered" },
-  { id: "HO394821",     lookupId: "205037", client: "Marcus Bell",      clientEmail: "mbell@gmail.com",     policyType: "Homeowners", carrier: "Travelers",      effectiveDate: "2026-07-12", processedDate: "2026-06-10", premium: 2241, premChange: 318,  policyAction: "Incomplete", userAction: null,             deliveryStatus: null },
+  { id: "HO394821",     lookupId: "205037", client: "Marcus Bell",      clientEmail: "mbell@gmail.com",     policyType: "Homeowners", carrier: "Travelers",      effectiveDate: "2026-07-12", processedDate: "2026-06-10", premium: 2241, premChange: 318,  policyAction: "To Review", userAction: null,             deliveryStatus: null },
   { id: "AU663901",     lookupId: "205038", client: "Priya Okafor",     clientEmail: "pokafor@gmail.com",   policyType: "Auto",       carrier: "Progressive",    effectiveDate: "2026-07-11", processedDate: "2026-06-09", premium: 1748, premChange: 95,   policyAction: "Completed", userAction: "No Action Required", deliveryStatus: null },
-  { id: "HO219045",     lookupId: "205039", client: "Tom Nguyen",       clientEmail: "tnguyen@gmail.com",   policyType: "Homeowners", carrier: "Nationwide",     effectiveDate: "2026-07-10", processedDate: "2026-06-09", premium: 1980, premChange: 441,  policyAction: "Incomplete", userAction: null,             deliveryStatus: null },
+  { id: "HO219045",     lookupId: "205039", client: "Tom Nguyen",       clientEmail: "tnguyen@gmail.com",   policyType: "Homeowners", carrier: "Nationwide",     effectiveDate: "2026-07-10", processedDate: "2026-06-09", premium: 1980, premChange: 441,  policyAction: "To Review", userAction: null,             deliveryStatus: null },
 ];
 
 function fmtDisplay(date: string) {
@@ -63,7 +63,7 @@ function StatusBadge({ policyAction }: { policyAction: PolicyAction }) {
   }
   return (
     <span className="bg-[#e9eef2] text-[#1e2831] font-['inter:medium',sans-serif] text-[13px] rounded-[6px] px-[10px] py-[4px] whitespace-nowrap">
-      Incomplete
+      To Review
     </span>
   );
 }

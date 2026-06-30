@@ -60,20 +60,20 @@ const ALL_PERF_ROWS: PerformanceRow[] = [
 const ALL_ACTIVITY_ROWS: ActivityRow[] = [
   { customer: "Sarah Mitchell", policyId: "POL-10293", effectiveDate: "05/01/26", user: "Hannah R.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Delivered", undeliveredReason: "—" },
   { customer: "James Parker", policyId: "POL-10311", effectiveDate: "05/03/26", user: "Marcus T.", userAction: "Called", status: "Completed", deliveryStatus: "Undelivered", undeliveredReason: "Mailbox does not exist" },
-  { customer: "Linda Torres", policyId: "POL-10288", effectiveDate: "04/28/26", user: "Priya N.", userAction: "—", status: "Incomplete", deliveryStatus: "—", undeliveredReason: "—" },
+  { customer: "Linda Torres", policyId: "POL-10288", effectiveDate: "04/28/26", user: "Priya N.", userAction: "—", status: "To Review", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Robert Kim", policyId: "POL-10301", effectiveDate: "05/10/26", user: "Dan O.", userAction: "Email Sent", status: "Completed", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Maria Santos", policyId: "POL-10276", effectiveDate: "04/15/26", user: "Lena K.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Opened", undeliveredReason: "—" },
   { customer: "Thomas Bradley", policyId: "POL-10319", effectiveDate: "05/15/26", user: "Hannah R.", userAction: "Email Sent", status: "Completed", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Angela Reyes", policyId: "POL-10327", effectiveDate: "05/20/26", user: "Marcus T.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Delivered", undeliveredReason: "—" },
-  { customer: "David Chen", policyId: "POL-10334", effectiveDate: "05/22/26", user: "Priya N.", userAction: "—", status: "Incomplete", deliveryStatus: "—", undeliveredReason: "—" },
+  { customer: "David Chen", policyId: "POL-10334", effectiveDate: "05/22/26", user: "Priya N.", userAction: "—", status: "To Review", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Fatima Al-Hassan", policyId: "POL-10341", effectiveDate: "06/01/26", user: "Dan O.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Undelivered", undeliveredReason: "Spam filter blocked" },
   { customer: "George Walton", policyId: "POL-10358", effectiveDate: "06/05/26", user: "Lena K.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Opened", undeliveredReason: "—" },
   { customer: "Nina Petrova", policyId: "POL-10362", effectiveDate: "06/08/26", user: "Hannah R.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Delivered", undeliveredReason: "—" },
-  { customer: "Oscar Delgado", policyId: "POL-10375", effectiveDate: "06/10/26", user: "Marcus T.", userAction: "—", status: "Incomplete", deliveryStatus: "—", undeliveredReason: "—" },
+  { customer: "Oscar Delgado", policyId: "POL-10375", effectiveDate: "06/10/26", user: "Marcus T.", userAction: "—", status: "To Review", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Emily Watson", policyId: "POL-10388", effectiveDate: "06/12/26", user: "Priya N.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Undelivered", undeliveredReason: "Mailbox full" },
   { customer: "Hassan Ali", policyId: "POL-10394", effectiveDate: "06/15/26", user: "Dan O.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Opened", undeliveredReason: "—" },
   { customer: "Grace Liu", policyId: "POL-10401", effectiveDate: "06/18/26", user: "Lena K.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Delivered", undeliveredReason: "—" },
-  { customer: "Patrick O'Brien", policyId: "POL-10417", effectiveDate: "06/20/26", user: "Hannah R.", userAction: "—", status: "Incomplete", deliveryStatus: "—", undeliveredReason: "—" },
+  { customer: "Patrick O'Brien", policyId: "POL-10417", effectiveDate: "06/20/26", user: "Hannah R.", userAction: "—", status: "To Review", deliveryStatus: "—", undeliveredReason: "—" },
   { customer: "Sofia Rossi", policyId: "POL-10423", effectiveDate: "06/22/26", user: "Marcus T.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Undelivered", undeliveredReason: "Invalid address" },
   { customer: "Liam Murphy", policyId: "POL-10439", effectiveDate: "06/25/26", user: "Priya N.", userAction: "Email Sent", status: "Completed", deliveryStatus: "Opened", undeliveredReason: "—" },
   { customer: "Aisha Khan", policyId: "POL-10445", effectiveDate: "06/28/26", user: "Dan O.", userAction: "Called", status: "Completed", deliveryStatus: "Delivered", undeliveredReason: "—" },
@@ -89,7 +89,7 @@ const DATE_RANGES = [
 
 const USER_GROUPS = ALL_PERF_ROWS.map(r => r.user);
 const USER_ACTIONS = ["All", "Email Sent", "Called"];
-const STATUSES = ["All", "Completed", "Incomplete"];
+const STATUSES = ["All", "Completed", "To Review"];
 const DELIVERY_STATUSES = ["All", "Delivered", "Undelivered", "Opened"];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -650,7 +650,7 @@ function PerformanceTable({ userFilter }: { userFilter: string[] }) {
   const colDef = [
     { label: "User", key: "user" as PerfSortKey, width: undefined, tip: undefined },
     { label: "Completed", key: "completed" as PerfSortKey, width: 130, tip: "Outreach is complete — email sent, called, mailed, texted, or no action needed." },
-    { label: "Incomplete", key: "review" as PerfSortKey, width: 110, tip: "Connect email is ready but hasn't been sent or actioned yet." },
+    { label: "To Review", key: "review" as PerfSortKey, width: 110, tip: "Connect email is ready but hasn't been sent or actioned yet." },
     { label: "Send Rate", key: "sendRate" as PerfSortKey, width: 120, tip: "% of processed policies with a Connect email sent." },
     { label: "Undelivered", key: "undelivered" as PerfSortKey, width: 110, tip: "Number of emails that failed to deliver for this user — covers invalid addresses, inbox issues, provider blocks, and opt-outs." },
     { label: "Time to Complete", key: "timeToComplete" as PerfSortKey, width: 150, tip: "Average time from when a policy is successfully processed by Quandri to when outreach is completed by the user." },
@@ -737,7 +737,7 @@ type ActivitySortKey = keyof ActivityRow;
 
 function StatusChip({ value }: { value: string }) {
   if (value === "—") return <span className="font-['inter:medium',sans-serif] text-[14px] text-[#4b5f73]">—</span>;
-  const bg = value === "Completed" ? "bg-[#e6f2eb]" : value === "Incomplete" ? "bg-[#fce9e8]" : value === "Delivered" ? "bg-[#e6f2eb]" : value === "Undelivered" ? "bg-[#fce9e8]" : value === "Opened" ? "bg-[#e6effa]" : "bg-[#e9eef2]";
+  const bg = value === "Completed" ? "bg-[#e6f2eb]" : value === "To Review" ? "bg-[#fce9e8]" : value === "Delivered" ? "bg-[#e6f2eb]" : value === "Undelivered" ? "bg-[#fce9e8]" : value === "Opened" ? "bg-[#e6effa]" : "bg-[#e9eef2]";
   return (
     <div className={`${bg} flex h-[26px] items-center justify-center overflow-clip px-[12px] rounded-[1000px] shrink-0`}>
       <span className="font-['inter:medium',sans-serif] text-[12px] text-[#1e2831] leading-[16px] whitespace-nowrap">{value}</span>
@@ -833,7 +833,7 @@ function ActivityTable() {
           <ColHeader label="Effective Date" colKey="effectiveDate" width={140} tip="Policy effective date" />
           <ColHeader label="User" colKey="user" width={110} />
           <ColHeader label="User Action" colKey="userAction" flex tip="Outreach method used — Email Sent, Called, Mailed, SMS, or No Action Required." />
-          <ColHeader label="Status" colKey="status" width={140} tip="Incomplete = not yet actioned. Completed = outreach done." />
+          <ColHeader label="Status" colKey="status" width={140} tip="To Review = not yet actioned. Completed = outreach done." />
           <ColHeader label="Delivery Status" colKey="deliveryStatus" flex tip="Email delivery outcome — Delivered, Undelivered, or Opened. Only applies to rows where an email was sent." />
           <ColHeader label="Undelivered Reason" colKey="undeliveredReason" width={200} tip="Why the email failed to deliver. Sourced from Mailgun — covers invalid addresses, full inboxes, spam blocks, opt-outs, and more." />
           {/* action column header */}
