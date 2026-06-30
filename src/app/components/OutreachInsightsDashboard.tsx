@@ -801,8 +801,8 @@ function ActivityTable() {
 
   function handleExport() {
     exportCSV("activity.csv",
-      ["Customer Name", "Policy ID", "Effective Date", "User", "User Action", "Status", "Delivery Status", "Undelivered Reason"],
-      rows.map(r => [r.customer, r.policyId, r.effectiveDate, r.user, r.userAction, r.status, r.deliveryStatus, r.undeliveredReason])
+      ["Customer Name", "Status", "User", "User Action", "Delivery Status", "Undelivered Reason", "Effective Date", "Policy ID"],
+      rows.map(r => [r.customer, r.status, r.user, r.userAction, r.deliveryStatus, r.undeliveredReason, r.effectiveDate, r.policyId])
     );
   }
 
@@ -834,13 +834,13 @@ function ActivityTable() {
       <div className="w-full overflow-x-auto">
         <div className="flex" style={{ minWidth: 900 }}>
           <ColHeader label="Customer Name" colKey="customer" flex />
-          <ColHeader label="Policy ID" colKey="policyId" flex tip="Unique policy identifier" />
-          <ColHeader label="Effective Date" colKey="effectiveDate" width={140} tip="Policy effective date" />
+          <ColHeader label="Status" colKey="status" width={140} tip="To Review = not yet actioned. Completed = outreach done." />
           <ColHeader label="User" colKey="user" width={110} />
           <ColHeader label="User Action" colKey="userAction" flex tip="Outreach method used — Email Sent, Called, Mailed, SMS, or No Action Required." />
-          <ColHeader label="Status" colKey="status" width={140} tip="To Review = not yet actioned. Completed = outreach done." />
           <ColHeader label="Delivery Status" colKey="deliveryStatus" flex tip="Email delivery outcome — Delivered, Undelivered, or Opened. Only applies to rows where an email was sent." />
           <ColHeader label="Undelivered Reason" colKey="undeliveredReason" width={200} tip="Why the email failed to deliver. Sourced from Mailgun — covers invalid addresses, full inboxes, spam blocks, opt-outs, and more." />
+          <ColHeader label="Effective Date" colKey="effectiveDate" width={140} tip="Policy effective date" />
+          <ColHeader label="Policy ID" colKey="policyId" flex tip="Unique policy identifier" />
           {/* action column header */}
           <ColumnTitle empty width={73} />
         </div>
@@ -853,11 +853,8 @@ function ActivityTable() {
               <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#e9eef2]">
                 <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.customer}</span>
               </div>
-              <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#e9eef2]">
-                <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.policyId}</span>
-              </div>
               <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 140 }}>
-                <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.effectiveDate}</span>
+                <StatusChip value={r.status} />
               </div>
               <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 110 }}>
                 <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.user}</span>
@@ -865,14 +862,17 @@ function ActivityTable() {
               <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#e9eef2]">
                 <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.userAction}</span>
               </div>
-              <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 140 }}>
-                <StatusChip value={r.status} />
-              </div>
               <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#e9eef2]">
                 <StatusChip value={r.deliveryStatus} />
               </div>
               <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 200 }}>
                 <span className="font-['inter:medium',sans-serif] text-[14px] text-[#4b5f73] leading-[20px] whitespace-nowrap">{r.undeliveredReason}</span>
+              </div>
+              <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 140 }}>
+                <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.effectiveDate}</span>
+              </div>
+              <div className="flex-1 min-w-0 h-[46px] flex items-center px-[20px] border-b border-[#e9eef2]">
+                <span className="font-['inter:medium',sans-serif] text-[14px] text-[#1e2831] leading-[20px] whitespace-nowrap">{r.policyId}</span>
               </div>
               <div className="h-[46px] flex items-center px-[20px] border-b border-[#e9eef2] shrink-0" style={{ width: 73 }}>
                 <Tooltip label="View policy" className="opacity-0 group-hover:opacity-100 transition-opacity">
